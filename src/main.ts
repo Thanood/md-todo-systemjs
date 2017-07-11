@@ -1,0 +1,41 @@
+import {Aurelia} from 'aurelia-framework'
+import {I18N, Backend} from 'aurelia-i18n';
+import environment from './environment';
+
+//Configure Bluebird Promises.
+(<any>Promise).config({
+  warnings: {
+    wForgottenReturn: false
+  }
+});
+
+export function configure(aurelia: Aurelia) {
+  aurelia.use
+    .standardConfiguration()
+    .feature('resources');
+
+  if (environment.debug) {
+    aurelia.use.developmentLogging();
+  }
+
+  if (environment.testing) {
+    aurelia.use.plugin('aurelia-testing');
+  }
+
+  aurelia.use.plugin('aurelia-materialize-bridge', b => b.useAll());
+  aurelia.use.plugin('aurelia-i18n', (instance) => {
+      instance.i18next.use(Backend.with(aurelia.loader));
+
+      return instance.setup({
+        backend: {
+          loadPath: '../locales/{{lng}}/{{ns}}.json',
+        },
+        lng : 'de',
+        attributes : ['t','i18n'],
+        fallbackLng : 'en',
+        debug : false
+      });
+    });
+  
+  aurelia.start().then(() => aurelia.setRoot());
+}

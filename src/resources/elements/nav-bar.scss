@@ -1,0 +1,20 @@
+nav-bar {
+  .nav-wrapper {
+    .brand-logo {
+      padding-left: 15px;
+    }
+
+    .i18n-dropdown {
+      padding-right: 15px;
+
+      span.material-icons {
+        position: relative;
+        top: 6px;
+      }
+    }
+
+    .settings {
+      padding-right: 15px;
+    }
+  }
+}

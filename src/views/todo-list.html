@@ -1,0 +1,40 @@
+<template>
+  <div class="todo-list-placeholder valign-wrapper" show.bind="todos.length === 0">
+    <h2 class="valign" i18n="todo.placeholder"></h2>
+  </div>
+  <md-collection class="todo-list" show.bind="todos.length > 0">
+    <md-collection-item repeat.for="todo of todos" click.delegate="openBottomModal(todo)">
+      <md-checkbox md-checked.bind="todo.done" click.delegate="returnFalse()"></md-checkbox>
+      <span class="todo-title ${ todo.done ? 'done' : '' }">${todo.title}</span>
+      <p>${todo.dueDate | date & signal:'aurelia-translation-signal'}</p>
+    </md-collection-item>
+  </md-collection>
+
+  <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <a ref="tap" click.delegate="addTodo()" md-button="floating: true; large: true;" md-tooltip="position: left; text: todo.add;" md-waves="color: light; circle: true;">
+      <i class="large material-icons">add</i>
+    </a>
+  </div>
+
+  <md-tap-target md-ref.bind="tap" view-model.ref="tapTarget">
+    <h5 class="white-text">Add a todo</h5>
+    <p class="white-text" i18n="todo.placeholder">xy</p>
+  </md-tap-target>
+
+  <add-todo-modal todo-added.delegate="saveTodo($event.detail)" view-model.ref="addTodoModal"></add-todo-modal>
+
+  <div md-modal="dismissible: false;" class="bottom-sheet" md-modal.ref="bottomModal">
+    <div class="modal-content">
+      <h4 t="todo.edit"></h4>
+      <form submit.delegate="finishEditTodo()">
+        <div>
+          <md-input ref="input" t="[md-label]todo.modal.inputLabel" md-label="put some text here" md-value.bind="editTodo.title"></md-input>
+        </div>
+        <input md-datepicker="value.two-way: editTodo.dueDate" type="date" placeholder="pick a date" />
+      </form>
+    </div>
+    <div class="modal-footer">
+      <a click.delegate="finishEditTodo()" md-button="flat: true;" md-waves="color: primary;" class="modal-action primary-text"><span t="todo.modal.close"></span></a>
+    </div>
+  </div>
+</template>
